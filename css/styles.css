@@ -70,6 +70,8 @@
 .vals {
     font-family: "Google Sans", sans-serif;
     font-size: 12pt;
+    font-weight: 300;
+    letter-spacing: -0.5px;
 }
 
 .metrics {
@@ -146,6 +148,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 1100px;
+    letter-spacing: -0.5px;
 }
 
 h1 {
