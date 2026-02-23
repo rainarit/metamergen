@@ -1,9 +1,16 @@
-<!DOCTYPE html><html><head>
-   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wdth,wght,GRAD@6..144,95,1..1000,0..100&family=Google+Sans:ital,opsz,wght,GRAD@0,17..18,400..700,-50..200;1,17..18,400..700,-50..200&display=swap');
-    </style>
+<!DOCTYPE html><html><head><link href="css/prism.min.css" rel="stylesheet">
+<script src="js/prism.min.js"></script>
+<script src="js/prism-python.min.js"></script>
+<script src="js/prism-bash.min.js"></script>
 
-    <!-- <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<link href="https://fonts.cdnfonts.com/css/chalkduster" rel="stylesheet">
+<style>
+    @import url('https://fonts.cdnfonts.com/css/chalkduster');
+</style>
+
+
+    <meta charset="UTF-8">
+    <!--<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>-->
 
@@ -23,307 +30,323 @@
 
     <script src="js/script.js"></script>
 
-    <link rel="icon" type="image/png" href="images/dreamsim_icon.png">
+    <link rel="icon" type="image/png" href="images/toponets_icon.png">
 
-    <title>Generating metamers of human scene understanding</title>
-    <meta property="og:image" content="images/teaser.jpg">
+    <title>MetamerGen</title>
+    <meta property="og:image" content="./webpage_assets/teaser.jpg">
     <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/ if you update and want to force Facebook to rescrape. -->
     <meta property="og:title" content="Generating metamers of human scene understanding">
-    <meta property="og:description" content="MetamerGen is a latent diffusion model that generates image “metamers” mirroring how humans understand visual 
-                                            scenes by combining high-resolution details from eye fixations with low-resolution peripheral information. 
-                                            Using this dual-stream fusion of detailed and contextual features, MetamerGen reveals how visual and semantic 
-                                            cues jointly shape human scene perception.">
+    <meta property="og:description" content="">
+
+    <!-- Get from Google Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async="" src=""></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-75863369-6');
+    </script>
 </head>
 
 <body>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/chalkduster');
+        @import url('https://fonts.googleapis.com/css2?family=Avenir+Black&display=swap');
+        
+        body {
+            font-family: 'Avenir', sans-serif;
+        }
+
+        .teaser-img {
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .teaser-img:hover {
+            transform: scale(1.1);
+        }
+    </style>
     <br>
     <center>
-        <span class="near-black" style="font-size:36px;font-weight:900;font-variation-settings:'GRAD' 60;">Generating metamers of human scene understanding</span>
+        <span class="near-black" style="font-size:36px;font-weight:bold;font-family:'Avenir', sans-serif;">Generating metamers of human scene understanding</span>
         <br>
-		<span class="near-black" style="font-size:26px;margin-bottom:10px;margin-top:10px;display:block;">ICLR 2026 Oral</span>
+		<span class="near-black" style="font-size:26px;font-weight:bold;background: linear-gradient(0deg, rgb(128, 0, 32) 0%, rgb(176, 48, 96) 100%);-webkit-background-clip: text;background-clip: text;-webkit-text-fill-color: transparent;filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));"><strong>ICLR 2026 Oral</strong></span>
+        <br>
         <br>
         <table align="center" width="900px">
             <tbody>
                 <tr>
                     <td align="center" width="215px">
                         <center>
-                            <span style="font-size:22px;font-variation-settings:'GRAD' -40;"><a href="https://rainarit.github.io/">Ritik Raina</a><sup style="vertical-align: sub;padding-left: 2px">*</sup><sup style="font-size: 0.7em;">1</sup>
-                                </span>
+                            <span style="font-size:22px"><a href="https://rainarit.github.io/"><b>Ritik Raina</b></a><sup style="font-size: 0.7em;">1</sup></span>
                         </center>
                     </td>
                     <td align="center" width="235px">
                         <center>
-                            <span style="font-size:22px;font-variation-settings:'GRAD' -40;"><a href="">Abe Leite</a><sup style="font-size: 0.7em;">2</sup></span>
+                            <span style="font-size:22px"><a href=""><b>Abe Leite</b></a><sup style="font-size: 0.7em;">1</sup></span>
                         </center>
                     </td>
                     <td align="center" width="260px">
                         <center>
-                            <span style="font-size:22px;font-variation-settings:'GRAD' -40;"><a href="https://alexgraikos.github.io/">Alexandros Graikos</a><sup style="vertical-align: sub;padding-left: 2px">*</sup><sup style="font-size: 0.7em;">1</sup></span>
+                            <span style="font-size:22px"><a href="https://alexgraikos.github.io/"><b>Alexandros Graikos</b></a><sup style="font-size: 0.7em;">1</sup></span>
                         </center>
                     </td>
-                    <td align="center" width="190px">
+                    <td align="center" width="260px">
                         <center>
-                            <span style="font-size:22px;font-variation-settings:'GRAD' -40;"><a href="https://ahnchive.github.io/">Seoyoung Ahn</a><sup style="font-size: 0.7em;padding-left: 1px;">2</sup></span>
+                            <span style="font-size:22px"><a href=""><b>Seoyoung Ahn</b></a><sup style="font-size: 0.7em;">2</sup></span>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2" style="width: 450px;">
+                        <center>
+                            <span style="font-size:22px"><a href=""><b>Dimitris Samaras</b></a><sup style="font-size: 0.7em;">1</sup></span>
+                        </center>
+                    </td>
+                    <td align="center" colspan="2" style="width: 450px;">
+                        <center>
+                            <span style="font-size:22px"><a href=""><b>Gregory J. Zelinsky</b></a><sup style="font-size: 0.7em;">1</sup></span>
                         </center>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <table align="center" width="675px">
+        <center>
+                    <table align="center" width="600px">
+                        <tbody>
+                            <tr>
+                                <td align="center" width="300px">
+                                    <div style="padding-top: 28; padding-bottom: 28;">
+                                        <sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">1</sup>
+                                        <img style="width:90%" src="images/SBU.png">
+                                    </div>
+                                </td>
+                                <td align="center" width="300px">
+                                    <div style="padding-top: 28; padding-bottom: 28;">
+                                        <sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">2</sup>
+                                        <img style="width:60%" src="images/UCB.png">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+        </center><table align="center" width="600px">
             <tbody>
                 <tr>
-                    <td align="center" width="225px">
-                        <center>
-                            <span style="font-size:22px;font-variation-settings:'GRAD' -40;"><a href="https://www3.cs.stonybrook.edu/~samaras//">Dimitris Samaras</a><sup style="font-size: 0.7em;padding-left: 2px;">1</sup></span>
-                        </center>
-                    </td>
-                    <td align="center" width="225px">
-                        <center>
-                            <span style="font-size:22px;font-variation-settings:'GRAD' -40;"><a href="https://www.cs.stonybrook.edu/people/faculty/gregoryzelinsky">Gregory J. Zelinsky</a><sup style="font-size: 0.7em;padding-left: 2px;">1</sup></span>
-                        </center>
-                    </td>
+                    
+                    
+                    <!-- <td style="padding:10px">
+						<sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">2 = idk</sup><img style="height:45px" src="./webpage_assets/WIS.png">
+                    </td> -->
                 </tr>
             </tbody>
         </table>
-        <table align="center" width="600px">
+        <table align="center" width="500px">
             <tbody>
                 <tr>
-                    <td style="padding:10px">
-						<sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">1</sup><img style="height:45px" src="images/SBU.png">
-                    </td>
-                    <td style="padding:10px">
-						<sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">2</sup><img style="height:45px" src="images/UCB.png">
+                    <td align="center" width="500px">
+                        <!-- <center>
+                            <i><span style="font-size:14px">* Equal contribution, order decided by random
+                                    seed</span></i>
+                        </center> -->
                     </td>
                 </tr>
             </tbody>
         </table>
-        <table width="800" border="0" align="center" class="menu" style="margin-bottom: 20px;font-weight:600;font-size: 20px;">
+        <table width="800" border="0" align="center" class="menu" style="margin-bottom: 20px;margin-top: 20px;font-weight: bold;font-size: 16px;">
             <tbody>
-                <tr>
-                    <td align="center">
-						<!--<span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="vertical-align:top;height:36px">
-							<a style="color:inherit;text-decoration:none;font-size:15px" href="./2306.09344.pdf" target="_blank">
-							<i style="padding-right:2px;font-size:23px" class="fa fa-file-pdf" aria-hidden="true"></i>
-							Paper
-							</a>
-						</span>-->
-						<span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="vertical-align:top;height:36px">
-							<a style="vertical-align:sub;color:inherit;text-decoration:none;font-size:15px" href="https://arxiv.org/abs/2601.11675" target="_blank">
-							<i style="padding-right:2px;font-size:20px" class="ai ai-arxiv" aria-hidden="true"></i>
-							ArXiv
-							</a>
-						</span>
-                        <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="vertical-align:top;height:36px">
-                            <a style="vertical-align:sub;color:inherit;text-decoration:none;font-size:15px" href="https://openreview.net/forum?id=cSDXx8V6K9&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2026%2FConference%2FAuthors%23your-submissions)" target="_blank">
-                                <img src="images/openreview_logo.png" style="padding-right:2px;font-size:20px;width: 18px;" aria-hidden="true">
-                                </img>
-                                OpenReview     
-                            </a>
-                        </span>
-						<span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="vertical-align:top;height:36px">
-							<a style="color:inherit;text-decoration:none;font-size:15px" href="" target="_blank">
-							<i style="padding-right:2px;font-size:23px" class="fab fa-github" aria-hidden="true"></i>
-							Coming Soon!
-							</a>
-						</span>
-                        <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="vertical-align:top;height:36px">
-							<a style="vertical-align:sub;color:inherit;text-decoration:none;font-size:15px" href="#bibtex" target="_self">
-							<i style="padding-right:2px;font-size:20px" class="fa fa-quote-left" aria-hidden="true"></i>
-							BibTex
-							</a>
-						</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </center>
-
-	<p id="teaser-description">
-        Human vision seamlessly integrates high-resolution details from fixated points with low-resolution contextual information from the periphery 
-        to form a coherent understanding of a scene. 
-        
-        Here we introduce MetamerGen, a latent diffusion model that reconstructs images aligned with human 
-        perceptual representations by combining foveal and peripheral inputs. The resulting model produces scene metamers—images that appear 
-        perceptually identical to humans despite pixel-level differences—providing new insights into how visual and semantic information jointly 
-        shape scene understanding.
-    </p>
-	<br>
-    <hr>
-
-    <center>
-        <h1>Abstract</h1>
-    </center>
-    <table align="center" width="900px">
-
-        <tbody>
             <tr>
-                <td>
-                    Current perceptual similarity metrics operate at the level of pixels and patches.
-                    These metrics compare images in terms of their low-level colors and textures, but
-                    fail to capture mid-level similarities, and differences, in image layout, object poses,
-                    and semantic content. In this paper, we develop a perceptual metric that assesses
-                    images holistically. Our first step is to collect a new dataset of human similarity
-                    judgments over image pairs that are alike in diverse ways. Critical to this dataset
-                    is that judgments are nearly automatic and shared by all observers. To achieve
-                    this we use recent text-to-image models to create synthetic pairs that are perturbed
-                    along various dimensions. We observe that popular perceptual metrics fall short
-                    of explaining our new data, and we introduce a new metric, DreamSim, tuned to
-                    better align with human perception. We analyze how our metric is affected by
-                    different visual attributes, and find that it focuses heavily on foreground objects and
-                    semantic content while also being sensitive to color and layout. Notably, despite
-                    being trained on synthetic data, our metric generalizes to real images, giving strong
-                    results on retrieval and reconstruction tasks. Furthermore, our metric outperforms
-                    both prior learned metrics and recent large vision models on these tasks.
-
-                </td>
+            <td align="center">
+            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
+            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://arxiv.org/abs/2501.16396" target="_blank">
+            <i style="padding-right:2px;font-size:15px" class="ai ai-arxiv" aria-hidden="true"></i>
+            Paper (ArXiv)
+            </a>
+            </span>
+            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
+            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://openreview.net/forum?id=THqWPzL00e" target="_blank">
+            <img src="images/openreview_logo.png" style="height:15px; padding-right:2px;" aria-hidden="true">
+            Openreview
+            </a>
+            </span>
+            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
+            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://github.com/murtylab/topoloss" target="_blank">
+            <i style="padding-right:2px;font-size:15px" class="fab fa-github" aria-hidden="true"></i>
+            Code: Coming Soon!
+            </a>
+            <!-- </span>
+            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
+            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://github.com/toponets/toponets" target="_blank">
+            <img src="images/hf-logo.png" style="height:16px" aria-hidden="true">
+            Models
+            </a>
+            </span>
+            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
+            <span style="display:inline-flex;align-items:center;">
+            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://colab.research.google.com/github/toponets/toponets.github.io/blob/main/notebooks/topoloss-demo.ipynb" target="_blank">
+            <img style="padding-bottom:0;padding-right:1px;height:13px" src="images/colab.png" aria-hidden="true">
+            Colab
+            </a>
+            </span>
+            </span>
+            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
+            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://toponets.github.io/visualize/" target="_blank">
+            <span style="font-size:15px;vertical-align:middle;">👁️</span>
+            Visualize
+            </a> -->
+            </span>
+            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
+            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="#bibtex" target="_self">
+            <i style="padding-right:2px;font-size:15px" class="fa fa-quote-left" aria-hidden="true"></i>
+            Bibtex
+            </a>
+            </span>
+            </td>
             </tr>
-        </tbody>
-    </table>
-    <br>
-    <hr>
-    <center>
-        <h1>Installation and Usage</h1>
+            </tbody>
+        </table>
+
     </center>
-    <div class="container-fluid" id="code-container" align="center" width="900px">
-        <div class="row">
-            <div class="col" id="pip-container" style="flex-direction: column;display:flex;">
-            <p>Installation:</p>
-            <code>
-                pip install dreamsim
-            </code>
-			<br>
-			<div style="flex-grow: 1;"></div>
-			<p>Preliminaries:</p>
-            <code>
-            from dreamsim import dreamsim
-			<br>
-			from PIL import Image
-			<br>
-			<br>
-			model, preprocess = dreamsim(pretrained=True, cache_dir="~/.cache")
-            </code>
-            </div>
-            <div class="col" id="example-container" style="flex-direction: column;display:flex;">
-                <p>Usage:</p>
-                <code>
-				# Feature extraction
-				<br>
-                img1 = preprocess(Image.open("img1_path"))
-                <br><br>
-                embedding = model.embed(img1)
-                <br>
-                <br>
-				# Perceptual similarity metric
-				<br>
-                img1 = preprocess(Image.open("img1_path"))
-                <br>
-                img2 = preprocess(Image.open("img2_path"))
-                <br>
-				<br>
-                distance = model(img1, img2)
-            </code>
-            </div>
+    
+    <p id="teaser-description">
+        Human vision combines low-resolution "gist" information from the visual periphery with sparse but high-resolution information from fixated locations to construct a coherent understanding of a visual scene.
+        <br>
+        <br>
+        <span id="bold">In this paper, we introduce <i>MetamerGen</i>, a tool for generating scenes that are aligned with latent human scene representations. MetamerGen is a latent diffusion model that combines peripherally obtained scene gist information with information obtained from scene-viewing fixations to generate image metamers for what humans understand after viewing a scene. </span>
+    </p>
+    
+	<br>
+
+    <center>
+    <img src="images/metamer.png" width="640" height="360" style="box-shadow: inset 0 0 0 8px white;">
+    </center>
+    <p id="teaser-description" style="margin-top: 20px;"><span id="bold">What are <i>scene metamers</i>?</span> Scene metamers are physically distinct images that produce indistinguishable perceptual experiences in human observers. They reveal the representational structure of the visual system by identifying image variations that preserve the latent features underlying human scene understanding.</p>
+    
+    <center style="margin-top: 20px;">
+    <video autoplay="" loop="" controls="" width="640" height="360" style="box-shadow: inset 0 0 0 8px white;">
+        <source src="media/banner_video.mp4" type="video/mp4">
+        <!-- Your browser does not support the video tag. -->
+    </video>
+    </center>
+    <p id="teaser-description" style="margin-top: 20px; padding: 1.5em;">
+  Each trial began with free viewing of an original scene, after which <span style="background: #d4edda; padding: 2px 6px; border-radius: 4px;"><strong>fixation coordinates from 45 participants</strong></span> were sent to <strong>MetamerGen</strong> to generate a new image conditioned on their gaze. The generated image was then shown briefly, and participants made a same–different judgment to assess perceptual metamerism. <span style="background: #fff3cd; padding: 2px 6px; border-radius: 4px;"><strong>In a separate experiment with 12 participants using randomized fixation locations</strong></span>, we tested how individual gaze strategies influence metamerism.
+</p>
+
+
+
+   
+    <hr>
+    
+    <center>
+        <h1>MetamerGen model architecture</h1>
+
+        <div class="col" id="method-figure">
+            <img class="round" src="images/model_arch.pdf" style="max-width: 80%; height: auto; object-fit: contain;">
         </div>
-    </div>
+        <br>
+
+        <table align="center" width="900px">
+
+            <tbody>
+                <tr>
+                    <td>
+                    High-resolution and blurred, low-resolution images
+                    are processed through DINOv2-Base to extract patch tokens. Foveal features are obtained by applying 
+                    binary masks to high-resolution patch tokens, retaining only fixated regions. Both foveal and
+                    peripheral patch tokens are processed through separate Perceiver-based query networks that compress 
+                    features into conditioning tokens compatible with Stable Diffusion’s cross-attention mechanism. 
+                    The resulting dual conditioning streams are integrated into the pretrained UNet.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </center>
     <br>
     <hr>
 
-
     <center>
-        <h1>Method</h1>
-    </center>
+        <h1>Probing the features of scene metamers across the visual hierarchy</h1>
 
-    <center>
-        <div class="container-fluid" id="method-container" align="center" width="900px">
-            <div class="row">
-                <div class="col" id="method-figure">
-                    <img class="round" style="width:500px" src="images/method.png">
-                </div>
-                <div class="col" id="method-description">
-                    Our perceptual metric is a pairwise image distance, computed as the cosine distance
-                    between concatenated backbone model features. We train via a hinge loss on image triplets,
-                    training via <a style="color:#f14d68" href="https://arxiv.org/abs/2106.09685">Low-Rank Adaptation (LoRA)</a>.
-                </div>
-            </div>
+        <div class="col" id="method-figure">
+            <img class="round" src="images/human_resnet_comps.pdf" style="max-width: 80%; height: auto; object-fit: contain;">
+
         </div>
+        <br>
+
+        <table align="center" width="900px">
+
+            <tbody>
+                <tr>
+                    <td>
+                <span id="bold">Multi-level feature analysis pipeline using neurally-grounded model:</span> (Top) Early, mid,
+                and late network layers serve as proxies for different stages of processing across the hierarchy of
+                visual brain areas. (Bottom) Results show that as feature similarity increased at these different 
+                processing levels, the proportion of participants judging generated images as metameric also increased.
+                These effects were clearer when metamers were generated based on a viewer’s own fixated locations
+                (salmon) than on randomly-sampled locations (turquoise).
+                </tr>
+            </tbody>
+        </table>
 
     </center>
     <br>
     <hr>
+
     <center>
-        <h1>Nearest Neighbors Experiment</h1>
+        <h1><span id="bold">Semantics</span> outperforms <span id="bold">structure</span> in driving scene metamerism</h1>
+
+        <div class="col" id="method-figure">
+            <img class="round" src="images/human_mid_high_level.pdf" style="max-width: 80%; height: auto; object-fit: contain;">
+        </div>
+        <br>
+
+        <table align="center" width="900px">             
+            
+            <tbody>
+                <tr>
+                   <td>
+<span id="bold">(Left) Mid-level visual features driving metamer judgments:</span> For metamers generated from the viewer's own fixation locations (salmon), changes in monocular depth estimates of scene structure strongly predicted "same" judgments to generations. The alignment in proto-object segmentation between original and generated scenes, quantified by mIoU, similarly predicted metamerism rate (higher mIoU scores correlating with higher proportions of "same" judgments), although here the relationship was less pronounced. 
+<span id="bold">(Right) High-level visual features driving metamer judgments:</span> Semantic similarity strongly predicts metameric scene understanding, with larger DreamSim distances corresponding to reduced perceptual alignment. CLIP similarity shows a similar trend, but not when scenes were generated from randomly sampled locations (turquoise).
+</td>
+
+                </tr>
+            </tbody>
+        </table>
+
     </center>
     <br>
+    <hr>
+
+    <center>
+    <h1><span id="bold">MetamerGen</span> Metameric vs Non-Metameric Scenes by <span id="bold">Human</span> vs <span id="bold">Random</span> Fixations</h1>
+
+    </center>
     <div id="nnCarousel" class="carousel slide teaser-carousel" data-ride="carousel" data-interval="7000">
 				    <ol class="carousel-indicators">
                         <li data-target="#nnCarousel" data-slide-to="0" class="active"></li>
                         <li data-target="#nnCarousel" data-slide-to="1"></li>
-                        <li data-target="#nnCarousel" data-slide-to="2"></li>
-                        <li data-target="#nnCarousel" data-slide-to="3"></li>
-                        <li data-target="#nnCarousel" data-slide-to="4"></li>
-                        <li data-target="#nnCarousel" data-slide-to="5"></li>
-                        <li data-target="#nnCarousel" data-slide-to="6"></li>
-                        <li data-target="#nnCarousel" data-slide-to="7"></li>
-                        <li data-target="#nnCarousel" data-slide-to="8"></li>
-                        <li data-target="#nnCarousel" data-slide-to="9"></li>
                     </ol>
 
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <div>
-                                <img class="teaser-img" src="images/nn_1.jpg">
+                                <img class="teaser-img" src="images/additional_human.pdf" ,="" style="max-width: 200%; height: auto; object-fit: contain;">
                             </div>
                         </div>
                         <div class="carousel-item">
                             <div>
-                                <img class="teaser-img" src="images/nn_7.jpg">
+                                <img class="teaser-img" src="images/additional_random.pdf" ,="" style="max-width: 200%; height: auto; object-fit: contain;">
                             </div>
                         </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_3.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_10.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_8.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_5.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_6.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_2.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_9.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/nn_4.jpg">
-                            </div>
-                        </div>
+
                     </div>
 
                     <a class="carousel-control-prev" href="#nnCarousel" role="button" data-slide="prev" style="height: 500px;">
                         <div class="slider-navigation-previous">
-                            <svg viewBox="0 0 50 80" xml:space="preserve" style="margin-right: 4px;">
+                            <svg viewBox="0 0 50 90" xml:space="preserve" style="margin-right: 4px;">
                                 <polyline fill="white" stroke-width=".5em" stroke-linecap="round" stroke-linejoin="round" points="45.63,75.8 0.375,38.087 45.63,0.375 ">
                                 </polyline>
                             </svg>
@@ -352,101 +375,40 @@
     <br>
     <br>
     <br>
-	<p id="nn-description">
-        <span id="bold">Nearest-neighbor retrieval.</span>
-        We perform a nearest neighbor search on the ImageNet-R and COCO datasets using different metrics.
-		Although the datasets include images outside of our training domain, our model consistently retrieves neighbors with similar appearance and class to that of the query image.
-    </p>
-    <hr>
-    <center>
-        <h1>Inversion Experiment</h1>
-    </center>
     <br>
-    <div id="inversionCarousel" class="carousel slide inversion-carousel" data-ride="carousel" data-interval="7000">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div>
-                                <img class="inversion-img" src="images/inversion_1.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="inversion-img" src="images/inversion_2.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="inversion-img" src="images/inversion_3.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="inversion-img" src="images/inversion_4.jpg">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="inversion-img" src="images/inversion_5.jpg">
-                            </div>
-                        </div>
-                    </div>
-
-                    <ol class="carousel-indicators" style="bottom: -35px;">
-                        <li data-target="#inversionCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#inversionCarousel" data-slide-to="1"></li>
-                        <li data-target="#inversionCarousel" data-slide-to="2"></li>
-                        <li data-target="#inversionCarousel" data-slide-to="3"></li>
-                        <li data-target="#inversionCarousel" data-slide-to="4"></li>
-                    </ol>
-
-                    <a class="carousel-control-prev" href="#inversionCarousel" role="button" data-slide="prev" style="height: 500px;">
-                        <div class="slider-navigation-previous">
-                            <svg viewBox="0 0 50 80" xml:space="preserve" style="margin-right: 4px;">
-                                <polyline fill="white" stroke-width=".5em" stroke-linecap="round" stroke-linejoin="round" points="45.63,75.8 0.375,38.087 45.63,0.375 ">
-                                </polyline>
-                            </svg>
-                        </div>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#inversionCarousel" role="button" data-slide="next" style="height: 500px;">
-                        <div class="slider-navigation-next">
-                            <svg viewBox="0 0 50 80" xml:space="preserve" style="margin-left: 4px;">
-                                <polyline fill="white" stroke-width=".5em" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 ">
-                                </polyline>
-                            </svg>
-                        </div>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div><table width="900px" border="0" align="center">
+    <table align="center" width="900px">             
+            
         <tbody>
             <tr>
-                
-
+                <td>
+  <strong>(1/2) Human Fixations:</strong> Additional metameric vs. non-metameric judgment examples. 
+  <span id="bold">(Left)</span> Original images with human fixations overlaid in red and corresponding generated images judged as "same" by participants. 
+  <span id="bold">(Right)</span> Original images with fixations and generated images judged as "different" by participants.
+  
+  <strong>(2/2) Random Fixations:</strong> Additional metameric vs. non-metameric judgment examples. 
+  <span id="bold">(Left)</span> Original images with randomly-sampled fixations overlaid in red and corresponding generated images judged as "same" by participants. 
+  <span id="bold">(Right)</span> Original images with fixations and generated images judged as "different" by participants.
+</td>
             </tr>
         </tbody>
     </table>
+
     <br>
-    <p id="inversion-description">
-        <span id="bold">Feature inversion across different metrics and image priors.</span>
-        Given a target image, we optimize for an image, where the objective is to match the target image
-        embedding of a given backbone.
-        Without any image prior (Optimization), our metric recovers better the color, shape and semantics
-        of the target image. With a weak image prior (DIP Inversion), our metric is better able to reproduce scene
-        structure and semantics. Using a diffusion model as a strong prior, our metric better captures overall semantics
-        and scene appearance.
-    </p>
-    <br>
+    
     <hr>
+
     <center>
         <h1>Acknowledgements</h1>
         <table align="center" width="900px">
             <tbody>
                 <tr>
                     <td>
-                        We thank Jim DiCarlo, Liad Mudrik, Nitzan Censor for fruitful discussions throughout the project. Additionally, we thank Narek Tumanyan for his insightful comments over the course of the project. Finally, we thank Michelle Li for proofreading sections of this paper and offering helpful comments.
-						<br>
-						<br>
-						This work was supported by the NSF GRFP Fellowship to Shobhita Sundaram, the Meta PhD Fellowship to Lucy Chai, the Israeli Science Foundation (grant 2303/20) to Tali Dekel, and the Packard Fellowship to Phillip Isola. 
+                        We would like to thank the National Science Foundation for supporting this work through
+awards 2123920 and 2444540 to GJZ, and the National Institutes of Health through their award
+R01EY030669, also to GJZ. AL is supported by NSF-GRFP award 2234683. AG is supported by
+NSF grants IIS-2123920, IIS-2212046 awarded to DS. Any opinions, findings and conclusions or
+recommendations expressed in this material are those of the author(s) and do not necessarily reflect
+the views of the funding agency.
 					</td>
                 </tr>
             </tbody>
@@ -460,17 +422,18 @@
     <div class="col">
         <code style="font-size: 14px;">
             @inproceedings{<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raina2026generating,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title={Generating metamers of human scene understanding},<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;author={Ritik Raina and Abe Leite and Alexandros Graikos and Seoyoung Ahn and Dimitris Samaras and Greg Zelinsky},<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;booktitle={The Fourteenth International Conference on Learning Representations},<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;year={2026},<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url={https://openreview.net/forum?id=cSDXx8V6K9}<br>
-            }
+                raina2026generating,<br>
+                title={Generating metamers of human scene understanding},<br>
+                author={Ritik Raina and Abe Leite and Alexandros Graikos and Seoyoung Ahn and Dimitris Samaras and Greg Zelinsky},<br>
+                booktitle={The Fourteenth International Conference on Learning Representations},<br>
+                year={2026},<br>
+                url={https://openreview.net/forum?id=cSDXx8V6K9}<br>
+                }<br>
         </code>
     </div>
     <br>
     <hr>
+
 
 
 
