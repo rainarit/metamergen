@@ -1049,20 +1049,24 @@
     </div>
 
     <div class="container blog comment main">
-        <div class="content">
-            <div class="interactive-image-wrapper" style="position:relative; display: inline-block; width: 85%;">
-                <img src="clarity/images/high_level.png">
-            </div>
-            <p class="caption">
-                <b>High-level semantic feature similarities predicting metamer judgments.</b> DreamSim distance and CLIP similarity are plotted against metamer rates for fixation-guided <span style="color:#e87e7e; font-weight:700;">(salmon)</span> and random <span style="color:#097969; font-weight:700;">(teal)</span> generations. Greater semantic alignment predicts more "same" judgments for fixation-guided generations across both metrics. For random generations, this relationship breaks down — particularly in CLIP — suggesting that semantic alignment alone is insufficient when fixations don't reflect the viewer's actual scene representation.
-            </p>
+    <div class="content">
+        <div class="interactive-image-wrapper" style="position:relative; display: inline-block; width: 85%;">
+            <img src="clarity/images/high_level.png">
         </div>
-        <div class="content-comment">
-            <p class="caption comment">
-                We chose DreamSim precisely because of its training objective: unlike CLIP, which learns semantic structure from image-text pairs, DreamSim was fine-tuned on human perceptual similarity judgments collected via a two-alternative forced-choice paradigm — the same task structure used in our experiment. This makes it a direct model of human visual similarity, and a natural fit for predicting metamer judgments.
-            </p>
-        </div>
+        <p class="caption">
+            <b>High-level semantic feature similarities predicting metamer judgments.</b> DreamSim distance and CLIP similarity are plotted against metamer rates for fixation-guided <span style="color:#e87e7e; font-weight:700;">(salmon)</span> and random <span style="color:#097969; font-weight:700;">(teal)</span> generations. Greater semantic alignment predicts more "same" judgments for fixation-guided generations across both metrics. For random generations, this relationship breaks down — particularly in CLIP — suggesting that semantic alignment alone is insufficient when fixations don't reflect the viewer's actual scene representation.
+        </p>
     </div>
+    <div class="content-comment">
+        <p class="caption comment">
+            DreamSim was fine-tuned on human perceptual similarity judgments via a two-alternative forced-choice paradigm — the same task our participants completed — making it a natural fit for predicting metamer rates.
+        </p>
+        <br>
+        <p class="caption comment">
+            Notably, pixel-level similarity (PSNR) had <em>no</em> predictive power over metamer judgments. Observers compare meanings, not pixels. We explore this further alongside a full feature analysis replication in the paper's appendix section A.9.
+        </p>
+    </div>
+</div>
 
     <div class="container blog main">
         <h1></h1>  
