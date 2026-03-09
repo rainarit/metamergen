@@ -1,3 +1,6 @@
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap");
 @font-face {
   font-family: "Charter";
