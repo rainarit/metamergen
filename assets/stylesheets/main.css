@@ -114,9 +114,12 @@ svg {
 }
 
 .container {
-  padding-right: calc(6vw - (100vw - 100%));
-  padding-left: 6vw;
+  padding-right: 5vw;
+  padding-left: 5vw;
   flex: 1;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 ::-moz-selection {
@@ -158,8 +161,8 @@ svg {
 }
 @media screen and (min-width: 769px) {
   .container {
-    padding-right: calc(8.5vw - (100vw - 100%));
-    padding-left: 8.5vw;
+    padding-right: 6vw;
+    padding-left: 6vw;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 16px;
@@ -190,8 +193,8 @@ svg {
 }
 @media screen and (min-width: 992px) {
   .container {
-    padding-right: calc(12vw - (100vw - 100%));
-    padding-left: 12vw;
+    padding-right: 8vw;
+    padding-left: 8vw;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 16px;
@@ -222,8 +225,8 @@ svg {
 }
 @media screen and (min-width: 1200px) {
   .container {
-    padding-right: calc(15vw - (100vw - 100%));
-    padding-left: 15vw;
+    padding-right: 10vw;
+    padding-left: 10vw;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 17px;
@@ -254,8 +257,8 @@ svg {
 }
 @media screen and (min-width: 1600px) {
   .container {
-    padding-right: calc(18vw - (100vw - 100%));
-    padding-left: 18vw;
+    padding-right: 12vw;
+    padding-left: 12vw;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 18px;
@@ -286,8 +289,8 @@ svg {
 }
 @media screen and (min-width: 2000px) {
   .container {
-    padding-right: calc(22vw - (100vw - 100%));
-    padding-left: 22vw;
+    padding-right: 14vw;
+    padding-left: 14vw;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 18px;
