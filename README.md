@@ -7,14 +7,12 @@
 If you find our work useful, please consider citing our paper.
 
 ```bibtex
-@article{panda2025louvresae,
-    title         = {LouvreSAE: Sparse Autoencoders for Interpretable and Controllable Style Transfer},
-    author        = {Panda, Raina and Fein, Daniel and Singhal, Arpita and Fiore, Mark and Agrawala, Maneesh and Bohacek, Matyas},
-    journal       = {arXiv preprint arXiv:2512.18930},
-    year          = {2025},
-    archivePrefix = {arXiv},
-    primaryClass  = {cs.CV},
-    doi           = {10.48550/arXiv.2512.18930},
-    url           = {https://arxiv.org/abs/2512.18930}
+@inproceedings{
+raina2026generating,
+title={Generating metamers of human scene understanding},
+author={Ritik Raina and Abe Leite and Alexandros Graikos and Seoyoung Ahn and Dimitris Samaras and Greg Zelinsky},
+booktitle={The Fourteenth International Conference on Learning Representations},
+year={2026},
+url={https://openreview.net/forum?id=cSDXx8V6K9}
 }
 ```
