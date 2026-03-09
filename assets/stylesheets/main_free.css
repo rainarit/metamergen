@@ -1,3 +1,33 @@
+/* Mobile fixes for horizontal overflow and explorer panels */
+@media screen and (max-width: 600px) {
+  .container {
+    padding-left: 2vw !important;
+    padding-right: 2vw !important;
+  }
+  div.container.blog.main,
+  div.container.blog.extra-large,
+  div.container.blog.extra-extra-large,
+  div.container.blog.large,
+  div.container.blog.max {
+    padding-left: 2vw !important;
+    padding-right: 2vw !important;
+  }
+  .explorer-container {
+    flex-wrap: wrap !important;
+  }
+  .explorer-panel {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .explorer-images img,
+  .explorer-images span {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    box-sizing: border-box;
+  }
+}
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap");
 @font-face {
   font-family: "Charter";
@@ -36,11 +66,15 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-body {
   background-color: white;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6, p, a, code, pre, ol, ul, li {
