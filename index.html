@@ -1,421 +1,1197 @@
-<!DOCTYPE html><html><head><link href="css/prism.min.css" rel="stylesheet">
-<script src="js/prism.min.js"></script>
-<script src="js/prism-python.min.js"></script>
-<script src="js/prism-bash.min.js"></script>
-
-<link href="https://fonts.cdnfonts.com/css/chalkduster" rel="stylesheet">
-<style>
-    @import url('https://fonts.cdnfonts.com/css/chalkduster');
-</style>
-
-
+<html lang="en-GB">
+<head>
     <meta charset="UTF-8">
-    <!--<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generating metamers of human scene understanding</title>
+    <meta name="description" content="Generating metamers of human scene understanding">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all">
+    <meta content="en_EN" property="og:locale">
+    <meta content="website" property="og:type">
+    <meta content="https://shikun.io/projects/clarity" property="og:url">
+    <meta content="Generating metamers of human scene understanding" property="og:title">
+    <meta content="Generating metamers of human scene understanding" property="og:description">
 
-	<script src="js/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
-	<script src="js/popper.min.js" crossorigin="anonymous"></script>
-	<script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:description" content="Generating metamers of human scene understanding">
+    <meta name="twitter:image:src" content="assets/figures/clarity.png">
 
-    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>-->
-    <!--<script src="http://www.google.com/jsapi" type="text/javascript"></script>-->
-
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-
-    <link href="css/styles.css" rel="stylesheet">
-    <link href="css/fontawesome.all.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="css/academicons.min.css">
-	<script defer="" src="js/fontawesome.all.min.js"></script>
-
-    <script src="js/script.js"></script>
-
-    <link rel="icon" type="image/png" href="images/icon.png">
-
-    <title>MetamerGen</title>
-    <meta property="og:image" content="./webpage_assets/teaser.jpg">
-    <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/ if you update and want to force Facebook to rescrape. -->
-    <meta property="og:title" content="Generating metamers of human scene understanding">
-    <meta property="og:description" content="">
-
-    <!-- Get from Google Analytics -->
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async="" src=""></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-75863369-6');
+    <link rel="stylesheet" type="text/css" media="all" href="assets/stylesheets/main_free.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="clarity/clarity.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/foundation.min.css">
+    <link href="assets/fontawesome-free-6.6.0-web/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
+    <script src="assets/scripts/navbar.js"></script> <!-- Comment to remove table of content. -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            "HTML-CSS": {
+              scale: 95,
+              fonts: ["Gyre-Pagella"],
+              imageFont: null,
+              undefinedFamily: "'Arial Unicode MS', cmbright"
+            },
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                processEscapes: true
+              }
+          });
     </script>
+    <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .interactive-image-wrapper {
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .image-hotspot {
+            background: transparent;
+            transition: background 0.2s ease;
+        }
+        .image-hotspot:hover {
+            background: rgba(9, 121, 105, 0.15);
+            border-radius: 4px;
+        }
+        @media screen and (max-width: 768px) {
+            .steering-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        /* Mobile styles for metamer explorers */
+        .explorer-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: nowrap;
+        }
+        .explorer-panel {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @media screen and (max-width: 1200px) {
+            .explorer-container {
+                flex-wrap: wrap;
+            }
+        }
+        @media screen and (max-width: 600px) {
+            .explorer-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .explorer-panel .param-controls {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .explorer-panel .param-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+            }
+            .explorer-panel .param-label {
+                text-align: center;
+                min-width: auto;
+            }
+            .explorer-images img {
+                width: 140px !important;
+                height: 140px !important;
+            }
+            .explorer-images span {
+                width: 140px !important;
+            }
+        }
+        .centered-img {
+            max-width: 420px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+    <style>
+        .centered-wide-img {
+            max-width: 1000px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
-    <style>
-        @import url('https://fonts.cdnfonts.com/css/chalkduster');
-        @import url('https://fonts.googleapis.com/css2?family=Avenir+Black&display=swap');
-        
-        body {
-            font-family: 'Avenir', sans-serif;
-        }
+    <!-- Title Page -->
+    <!-- Dark Theme Example: Change the background colour dark and change the following div "blog-title" into "blog-title white". -->
+    <div class="container blog" id="first-content" style="background-color: #E0E4E6;">
+        <!-- If you don't have a project cover: Change "blog-title" into "blog-title no-cover"  -->
+        <div class="blog-title">
+            <div class="blog-intro">
+                <div>
+                    <h1 class="title" style="font-weight:600">Generating metamers of human scene understanding</h1>
 
-        .teaser-img {
-            transition: transform 0.3s ease;
-            cursor: zoom-in;
-        }
-
-        .teaser-img:hover {
-            transform: scale(1.1);
-        }
-    </style>
-    <br>
-    <center>
-        <span class="near-black" style="font-size:36px;font-weight:bold;font-family:'Avenir', sans-serif;">Generating metamers of human scene understanding</span>
-        <br>
-		<span class="near-black" style="font-size:26px;font-weight:bold;background: linear-gradient(0deg, rgb(128, 0, 32) 0%, rgb(176, 48, 96) 100%);-webkit-background-clip: text;background-clip: text;-webkit-text-fill-color: transparent;filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.2));"><strong>ICLR 2026 Oral</strong></span>
-        <br>
-        <br>
-        <table align="center" width="900px">
-            <tbody>
-                <tr>
-                    <td align="center" width="215px">
-                        <center>
-                            <span style="font-size:22px"><a href="https://rainarit.github.io/"><b>Ritik Raina</b></a><sup style="font-size: 0.7em;">1</sup></span>
-                        </center>
-                    </td>
-                    <td align="center" width="235px">
-                        <center>
-                            <span style="font-size:22px"><a href=""><b>Abe Leite</b></a><sup style="font-size: 0.7em;">1</sup></span>
-                        </center>
-                    </td>
-                    <td align="center" width="260px">
-                        <center>
-                            <span style="font-size:22px"><a href="https://alexgraikos.github.io/"><b>Alexandros Graikos</b></a><sup style="font-size: 0.7em;">1</sup></span>
-                        </center>
-                    </td>
-                    <td align="center" width="260px">
-                        <center>
-                            <span style="font-size:22px"><a href=""><b>Seoyoung Ahn</b></a><sup style="font-size: 0.7em;">2</sup></span>
-                        </center>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" colspan="2" style="width: 450px;">
-                        <center>
-                            <span style="font-size:22px"><a href=""><b>Dimitris Samaras</b></a><sup style="font-size: 0.7em;">1</sup></span>
-                        </center>
-                    </td>
-                    <td align="center" colspan="2" style="width: 450px;">
-                        <center>
-                            <span style="font-size:22px"><a href=""><b>Gregory J. Zelinsky</b></a><sup style="font-size: 0.7em;">1</sup></span>
-                        </center>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <center>
-                    <table align="center" width="600px">
-                        <tbody>
-                            <tr>
-                                <td align="center" width="300px">
-                                    <div style="padding-top: 28; padding-bottom: 28;">
-                                        <sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">1</sup>
-                                        <img style="width:90%" src="images/SBU.png">
-                                    </div>
-                                </td>
-                                <td align="center" width="300px">
-                                    <div style="padding-top: 28; padding-bottom: 28;">
-                                        <sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">2</sup>
-                                        <img style="width:60%" src="images/UCB.png">
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-        </center><table align="center" width="600px">
-            <tbody>
-                <tr>
-                    
-                    
-                    <!-- <td style="padding:10px">
-						<sup style="padding-right: 2px;font-size: 18px;top: -0.85em;">2 = idk</sup><img style="height:45px" src="./webpage_assets/WIS.png">
-                    </td> -->
-                </tr>
-            </tbody>
-        </table>
-        <table align="center" width="500px">
-            <tbody>
-                <tr>
-                    <td align="center" width="500px">
-                        <!-- <center>
-                            <i><span style="font-size:14px">* Equal contribution, order decided by random
-                                    seed</span></i>
-                        </center> -->
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <table width="800" border="0" align="center" class="menu" style="margin-bottom: 20px;margin-top: 20px;font-weight: bold;font-size: 16px;">
-            <tbody>
-            <tr>
-            <td align="center">
-            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
-            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://arxiv.org/pdf/2601.11675" target="_blank">
-            <i style="padding-right:2px;font-size:15px" class="ai ai-arxiv" aria-hidden="true"></i>
-            Paper (ArXiv)
-            </a>
-            </span>
-            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
-            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="https://openreview.net/forum?id=cSDXx8V6K9" target="_blank">
-            <img src="images/openreview_logo.png" style="height:15px; padding-right:2px;" aria-hidden="true">
-            Openreview
-            </a>
-            </span>
-            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
-            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="" target="_blank">
-            <i style="padding-right:2px;font-size:15px" class="fab fa-github" aria-hidden="true"></i>
-            Code: Coming Soon!
-            </a>
-            </a> -->
-            </span>
-            <span class="bg-near-black f6 no_hover br-pill ph3 pv2 dib" style="display:inline-flex;align-items:center;vertical-align:middle;height:26px; font-size:13px; padding: 0 10px;">
-            <a style="color:inherit;text-decoration:none;font-size:13px;display:flex;align-items:center;" href="#bibtex" target="_self">
-            <i style="padding-right:2px;font-size:15px" class="fa fa-quote-left" aria-hidden="true"></i>
-            BibTex
-            </a>
-            </span>
-            </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </center>
-    
-    <p id="teaser-description">
-        Human vision combines low-resolution "gist" information from the visual periphery with sparse but high-resolution information from fixated locations to construct a coherent understanding of a visual scene.
-        <br>
-        <br>
-        <span id="bold">In this paper, we introduce <i>MetamerGen</i>, a tool for generating scenes that are aligned with latent human scene representations. MetamerGen is a latent diffusion model that combines peripherally obtained scene gist information with information obtained from scene-viewing fixations to generate image metamers for what humans understand after viewing a scene. </span>
-    </p>
-    
-	<br>
-
-    <center>
-    <img src="images/metamer.png" width="640" height="360" style="box-shadow: inset 0 0 0 8px white;">
-    </center>
-    <p id="teaser-description" style="margin-top: 20px;"><span id="bold">What are <i>scene metamers</i>?</span> Scene metamers are physically distinct images that produce indistinguishable perceptual experiences in human observers. They reveal the representational structure of the visual system by identifying image variations that preserve the latent features underlying human scene understanding.</p>
-    
-    <center style="margin-top: 20px;">
-    <video autoplay="" loop="" controls="" width="640" height="360" style="box-shadow: inset 0 0 0 8px white;">
-        <source src="media/banner_video.mp4" type="video/mp4">
-        <!-- Your browser does not support the video tag. -->
-    </video>
-    </center>
-    <p id="teaser-description" style="margin-top: 20px; padding: 1.5em;">
-  Each trial began with free viewing of an original scene, after which <span style="background: #d4edda; padding: 2px 6px; border-radius: 4px;"><strong>fixation coordinates from 45 participants</strong></span> were sent to <strong>MetamerGen</strong> to generate a new image conditioned on their gaze. The generated image was then shown briefly, and participants made a same–different judgment to assess perceptual metamerism. <span style="background: #fff3cd; padding: 2px 6px; border-radius: 4px;"><strong>In a separate experiment with 12 participants using randomized fixation locations</strong></span>, we tested how individual gaze strategies influence metamerism.
-</p>
-
-
-
-   
-    <hr>
-    
-    <center>
-        <h1>MetamerGen model architecture</h1>
-
-        <div class="col" id="method-figure">
-            <img class="round" src="images/model_arch.pdf" style="max-width: 80%; height: auto; object-fit: contain;">
-        </div>
-        <br>
-
-        <table align="center" width="900px">
-
-            <tbody>
-                <tr>
-                    <td>
-                    High-resolution and blurred, low-resolution images
-                    are processed through DINOv2-Base to extract patch tokens. Foveal features are obtained by applying 
-                    binary masks to high-resolution patch tokens, retaining only fixated regions. Both foveal and
-                    peripheral patch tokens are processed through separate Perceiver-based query networks that compress 
-                    features into conditioning tokens compatible with Stable Diffusion’s cross-attention mechanism. 
-                    The resulting dual conditioning streams are integrated into the pretrained UNet.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-    </center>
-    <br>
-    <hr>
-
-    <center>
-        <h1>Probing the features of scene metamers across the visual hierarchy</h1>
-
-        <div class="col" id="method-figure">
-            <img class="round" src="images/human_resnet_comps.pdf" style="max-width: 80%; height: auto; object-fit: contain;">
-
-        </div>
-        <br>
-
-        <table align="center" width="900px">
-
-            <tbody>
-                <tr>
-                    <td>
-                <span id="bold">Multi-level feature analysis pipeline using neurally-grounded model:</span> (Top) Early, mid,
-                and late network layers serve as proxies for different stages of processing across the hierarchy of
-                visual brain areas. (Bottom) Results show that as feature similarity increased at these different 
-                processing levels, the proportion of participants judging generated images as metameric also increased.
-                These effects were clearer when metamers were generated based on a viewer’s own fixated locations
-                (salmon) than on randomly-sampled locations (turquoise).
-                </tr>
-            </tbody>
-        </table>
-
-    </center>
-    <br>
-    <hr>
-
-    <center>
-        <h1><span id="bold">Semantics</span> outperforms <span id="bold">structure</span> in driving scene metamerism</h1>
-
-        <div class="col" id="method-figure">
-            <img class="round" src="images/human_mid_high_level.pdf" style="max-width: 80%; height: auto; object-fit: contain;">
-        </div>
-        <br>
-
-        <table align="center" width="900px">             
-            
-            <tbody>
-                <tr>
-                   <td>
-<span id="bold">(Left) Mid-level visual features driving metamer judgments:</span> For metamers generated from the viewer's own fixation locations (salmon), changes in monocular depth estimates of scene structure strongly predicted "same" judgments to generations. The alignment in proto-object segmentation between original and generated scenes, quantified by mIoU, similarly predicted metamerism rate (higher mIoU scores correlating with higher proportions of "same" judgments), although here the relationship was less pronounced. 
-<span id="bold">(Right) High-level visual features driving metamer judgments:</span> Semantic similarity strongly predicts metameric scene understanding, with larger DreamSim distances corresponding to reduced perceptual alignment. CLIP similarity shows a similar trend, but not when scenes were generated from randomly sampled locations (turquoise).
-</td>
-
-                </tr>
-            </tbody>
-        </table>
-
-    </center>
-    <br>
-    <hr>
-
-    <center>
-    <h1><span id="bold">MetamerGen</span> Metameric vs Non-Metameric Scenes by <span id="bold">Human</span> vs <span id="bold">Random</span> Fixations</h1>
-
-    </center>
-    <div id="nnCarousel" class="carousel slide teaser-carousel" data-ride="carousel" data-interval="7000">
-				    <ol class="carousel-indicators">
-                        <li data-target="#nnCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#nnCarousel" data-slide-to="1"></li>
-                    </ol>
-
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div>
-                                <img class="teaser-img" src="images/additional_human.pdf" ,="" style="max-width: 200%; height: auto; object-fit: contain;">
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div>
-                                <img class="teaser-img" src="images/additional_random.pdf" ,="" style="max-width: 200%; height: auto; object-fit: contain;">
-                            </div>
-                        </div>
-
+                    <p class="author">
+                        <a href="https://rainarit.github.io" style="text-decoration: none;">Ritik Raina</a><sup>1</sup>,
+                        <a style="text-decoration: none;">Abe Leite</a><sup>1</sup>,
+                        <a href="https://alexgraikos.github.io/" style="text-decoration: none;">Alexandros Graikos</a><sup>1</sup>,
+                        <a style="text-decoration: none;">Seoyoung Ahn</a><sup>2</sup>,
+                        <a href="https://www3.cs.stonybrook.edu/~samaras/" style="text-decoration: none;">Dimitris Samaras</a><sup>1</sup>, and
+                        <a href="https://you.stonybrook.edu/zelinsky/who-we-are/" style="text-decoration: none;">Gregory J. Zelinsky</a><sup>1</sup>
+                    </p>
+                    <p class="author" style="padding-top: 0px;">
+                        <sup>1</sup>Stony Brook University&nbsp;&nbsp;&nbsp;&nbsp;<sup>2</sup>UC Berkeley
+                    </p>
+                    <p class="abstract">
+                        Your eyes sharply sample only a tiny sliver of the world at any moment, yet your brain constructs a rich, complete scene. But what does that internal representation actually contain — and can we make it visible? We introduce <span style="color:#097969; font-weight:bold; font-style:italic;">MetamerGen</span>, a model that probes the brain's hidden encoding of scenes by generating images that, despite looking physically different, are perceptually indistinguishable from the original. By fusing where you looked with what your periphery sensed, it reconstructs not the scene itself, but what your mind held of it — a new lens into the structure of human scene understanding.
+                    </p>
+                   
+                </div>
+               
+                <div class="info">
+                    <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 5px; flex-wrap: nowrap; overflow-x: auto;">
+                        <a href="https://arxiv.org/abs/2601.11675" class="button icon" style="background-color: rgba(255, 255, 255, 0.25); margin-bottom: 0; font-weight: 400;">Paper<i class="fa-solid fa-book-open"></i></a>
+                        <a href="https://openreview.net/forum?id=cSDXx8V6K9" class="button icon" style="background-color: rgba(255, 255, 255, 0.25); margin-bottom: 0; font-weight: 400;">OpenReview<i class="fa-solid fa-comments"></i></a>
+                        <a href="https://x.com/ritikr_/status/2020826258154631397?s=20" class="button icon" style="background-color: rgba(255, 255, 255, 0.25); margin-bottom: 0; font-weight: 400;">Tweet<i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="" class="button icon" style="background-color: rgba(255, 255, 255, 0.25); margin-bottom: 0; font-weight: 400;">HuggingFace<i class="fa-solid fa-database"></i></a>
+                        <a href="#bibtex-citation" class="button icon" style="background-color: rgba(255, 255, 255, 0.25); margin-bottom: 0; font-weight: 400;">BibTeX<i class="fa-solid fa-quote-right" style="margin-left: 6px;"></i></a>
                     </div>
+                </div>
 
-                    <a class="carousel-control-prev" href="#nnCarousel" role="button" data-slide="prev" style="height: 500px;">
-                        <div class="slider-navigation-previous">
-                            <svg viewBox="0 0 50 90" xml:space="preserve" style="margin-right: 4px;">
-                                <polyline fill="white" stroke-width=".5em" stroke-linecap="round" stroke-linejoin="round" points="45.63,75.8 0.375,38.087 45.63,0.375 ">
-                                </polyline>
-                            </svg>
-                        </div>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#nnCarousel" role="button" data-slide="next" style="height: 500px;">
-                        <div class="slider-navigation-next">
-                            <svg viewBox="0 0 50 80" xml:space="preserve" style="margin-left: 4px;">
-                                <polyline fill="white" stroke-width=".5em" stroke-linecap="round" stroke-linejoin="round" points="0.375,0.375 45.63,38.087 0.375,75.8 ">
-                                </polyline>
-                            </svg>
-                        </div>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div><table width="900px" border="0" align="center">
-        <tbody>
-            <tr>
+                <br>
                 
+                <div class="info">
+                    <p style="font-size: 1.1em; margin: 0; font-weight: 800; color: #097969; text-shadow: 0 0 10px rgba(9, 121, 105, 0.28);">ICLR 2026 Oral</p>
+                </div>
 
-            </tr>
-        </tbody>
-    </table>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <table align="center" width="900px">             
-            
-        <tbody>
-            <tr>
-                <td>
-  <strong>(1/2) Human Fixations:</strong> Additional metameric vs. non-metameric judgment examples. 
-  <span id="bold">(Left)</span> Original images with human fixations overlaid in red and corresponding generated images judged as "same" by participants. 
-  <span id="bold">(Right)</span> Original images with fixations and generated images judged as "different" by participants.
-  
-  <strong>(2/2) Random Fixations:</strong> Additional metameric vs. non-metameric judgment examples. 
-  <span id="bold">(Left)</span> Original images with randomly-sampled fixations overlaid in red and corresponding generated images judged as "same" by participants. 
-  <span id="bold">(Right)</span> Original images with fixations and generated images judged as "different" by participants.
-</td>
-            </tr>
-        </tbody>
-    </table>
+            </div>
 
-    <br>
-    
-    <hr>
+            <div class="blog-cover">
+                <img class="foreground" src="clarity/images/foreground.png" alt="Foreground" style="height: 420px; width:auto">
+            </div>
 
-    <center>
-        <h1>Acknowledgements</h1>
-        <table align="center" width="900px">
-            <tbody>
-                <tr>
-                    <td>
-                        We would like to thank the National Science Foundation for supporting this work through
-awards 2123920 and 2444540 to GJZ, and the National Institutes of Health through their award
-R01EY030669, also to GJZ. AL is supported by NSF-GRFP award 2234683. AG is supported by
-NSF grants IIS-2123920, IIS-2212046 awarded to DS. Any opinions, findings and conclusions or
-recommendations expressed in this material are those of the author(s) and do not necessarily reflect
-the views of the funding agency.
-					</td>
-                </tr>
-            </tbody>
-        </table>
-    </center>
-    <br>
-    <hr>
-    <center>
-        <h1 name="bibtex" id="bibtex">Bibtex</h1>
-    </center>
-    <div class="col">
-        <code style="font-size: 14px;">
-            @inproceedings{<br>
-                raina2026generating,<br>
-                title={Generating metamers of human scene understanding},<br>
-                author={Ritik Raina and Abe Leite and Alexandros Graikos and Seoyoung Ahn and Dimitris Samaras and Greg Zelinsky},<br>
-                booktitle={The Fourteenth International Conference on Learning Representations},<br>
-                year={2026},<br>
-                url={https://openreview.net/forum?id=cSDXx8V6K9}<br>
-                }<br>
-        </code>
+        </div>
     </div>
-    <br>
-    <hr>
+
+    <div class="container blog main">
+        <div class="content">
+            <h1 >
+                What is the <code style="font-size: 1.0em; color: #097969; font-weight: 500; background-color: rgba(9, 121, 105, 0.10); border: 1px solid rgba(9, 121, 105, 0.35); border-radius: 6px; padding: 0.08em 0.35em;">metamer</code> in <span style="color: #097969; font-weight: 900;">Metamer</span>Gen?
+            </h1>
+
+            <p class="text">
+                <b>Metamerism</b> is a term originating in color vision that refers to stimuli that are physically different yet perceptually indistinguishable. Two lights with different spectral compositions, for example, can appear identical to human observers because they produce the same response in the eye's photoreceptors. This concept has since been extended to texture perception and visual crowding, offering a powerful lens for inferring the underlying representations that shape what we see.
+            </p>  
+            
+            <p class="text">
+                In the context of scene understanding, two scenes are <em>metameric</em> if humans form equivalent internal representations of them. When a person views scene A, forming some mental encoding, and later views a physically different scene B that produces the same encoding, they believe the two scenes to be identical. Scene metamers therefore reveal what information the brain has encoded and retained from an originally viewed scene — and what it has discarded. By exploring the factors that cause a generated scene to become a metamer, we can investigate the structure of human scene understanding.
+            </p>
+        </div>
+    </div>
 
 
+<div class="container blog comment main gray">
+        <div class="content">
+            <img src="clarity/images/metamerism.png" style="width: 80%;">
+            <p class="caption">
+                An observer views <b>Scene A</b> (with white rings indicating <b>fixation locations</b>) and <b>Scene B</b>. Despite being physically different images, the two scenes produce <b>equivalent internal representations</b> — the observer perceives them as identical. These <b>scene metamers</b> reveal what information the visual system encodes and retains versus what it discards.
+            </p>
+        </div>
+
+        <div class="content-comment">
+            <p class="caption comment">
+                Rather than matching low-level peripheral statistics, we capture a <b><em>post-gist</em></b> level of representation — combining <b>gist-level scene encoding</b> from blurred peripheral vision with high-resolution <b>foveal representations</b> at fixation locations. The sequence of fixations dictates what the observer understands to be in the scene.
+            </p>
+        </div>
+    </div>
+
+    <!-- <div class="container blog extra-large gray-linear">
+        <p class="caption inline">
+          <b>Inter-Class Shape Morphing</b>  
+        </p>
+        <div class="columns-6">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_inter1.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_inter2.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_inter3.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_inter4.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_inter5.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_inter6.gif">
+        </div>
+        <p class="caption inline">
+            <b>Intra-Class Shape Morphing</b>
+        </p>
+        <div class="columns-6">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_intra1.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_intra2.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_intra3.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_intra4.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_intra5.gif">
+            <img src="https://shikun.io/projects/vsl/shape_morph/morph_intra6.gif">
+        </div>
+        <p class="caption">Note that, although these animations have a white background, they beautifully blend within this container. </p>
+    </div> -->
+
+    <div class="container blog main">
+        <h1>
+            <span style="color: #097969; font-weight: 900;">MetamerGen</span>: perceptually-informed conditioning
+        </h1>
+
+        <h2 id="foveal-peripheral-features">
+            Representing foveal and peripheral visual features
+        </h2>
+
+        <p class="text" style="text-align: justify">
+            Given an image $I$ and a set of <b>fixation locations</b> (e.g., those fixated by a human during free-viewing), we extract <b>foveal information</b> at each fixation location and <b>peripheral information</b> capturing the overall context. We employ a <b>DINOv2-Base</b> model (with registers) as the feature extractor. DINOv2 processes $448 \times 448$ images with a patch size of $14 \times 14$, yielding $1024$ tokens ($32 \times 32$ grid), each embedded in $768$ dimensions. The <b>patch token</b> at a specific location encodes detailed visual and semantic information analogous to the high-resolution information sampled by the fovea during a fixation. To model the information gathered during a series of fixations, we apply a <b>binary mask</b> $M_{\text{fixation}}$ to the patch tokens, zeroing out all non-fixated image patches.
+        </p>
+
+        <p class="text" style="text-align: justify">
+            To obtain <b>peripheral visual features</b>, we downsample the image and then upsample it back to $448 \times 448$. This blurred image, $I_{\text{downsample}}$, is also processed with DINOv2, but now retaining all output patch tokens without masking. These peripheral tokens encode uncertain visual representations across the entire scene, capturing the noisy information available in peripheral vision that requires validation through targeted foveal fixations.
+        </p>
+        <br>
+
+        <div class="blog extra-large gray">
+            <div class="columns-3">
+                <div>
+                    <img-comparison-slider class="slider-container white">
+                        <figure slot="first" class="before">
+                            <img src="clarity/images/448.png">
+                            <figcaption class="white">$I_{\text{original}}$ ($448\times448$)</figcaption>
+                        </figure>
+                        <figure slot="second" class="after">
+                            <img src="clarity/images/448_dinov2.png">
+                            <figcaption class="white">DINOv2 features ($32\times32$)</figcaption>
+                        </figure>
+                    </img-comparison-slider>
+                    <p class="caption inline center">Original image and DINOv2 tokens.</p>
+                </div>
+                
+                <div>
+                    <img-comparison-slider class="slider-container white">
+                        <figure slot="first" class="before">
+                            <img src="clarity/images/112.png">
+                            <figcaption class="white">$I_{\text{downsample}}$ ($112\times112$)</figcaption>
+                        </figure>
+                        <figure slot="second" class="after">
+                            <img src="clarity/images/112_dinov2.png">
+                            <figcaption class="white">DINOv2 periphery ($32\times32$)</figcaption>
+                        </figure>
+                    </img-comparison-slider>
+                    <p class="caption inline center">Downsampled peripheral features.</p>
+                </div>
+
+                <div>
+                    <img-comparison-slider class="slider-container white">
+                        <figure slot="first" class="before">
+                            <img src="clarity/images/448_fixation.png">
+                            <figcaption class="white">$I_{\text{original}} \odot M_{\text{fixation}}$ ($448\times448$)</figcaption>
+                        </figure>
+                        <figure slot="second" class="after">
+                            <img src="clarity/images/448_fixation_dinov2.png">
+                            <figcaption class="white">DINOv2 fovea ($32\times32$)</figcaption>
+                        </figure>
+                    </img-comparison-slider>
+                    <p class="caption inline center">Fixation-masked foveal features.</p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <h2 id="conditioning-adapters">
+            Foveal and peripheral conditioning adapters
+        </h2>
+
+        <p class="text" style="text-align: justify">
+            We develop <b>foveal and peripheral conditioning adapters</b> to integrate visual information as additional conditioning signals in Stable Diffusion. Similar to IP-adapters, which integrate CLIP image embeddings into Stable Diffusion, we learn how to incorporate DINOv2 patch embeddings into the <b>cross-attention mechanism</b> of the text-to-image Stable Diffusion model. Both foveal and peripheral DINOv2 embeddings are first processed through separate <b>Perceiver-based resampler networks</b> $R(\cdot)$ that compress the $1024$ DINOv2 embeddings into $32$ conditioning tokens compatible with the pre-trained UNet's cross-attention:
+            $$
+            e_{\text{foveal}} = R_{\text{foveal}}(\text{DINOv2}(I_{\text{original}}) \odot M_{\text{fixation}}),\quad e_{\text{peripheral}} = R_{\text{peripheral}}(\text{DINOv2}(I_{\text{downsample}}))
+            $$
+            The conditions are then integrated through separate cross-attention mechanisms, where for each conditioning source (text, foveal, peripheral) we project separately into keys and values, which we combine additively into the denoising through cross-attention with <b>scaling factors</b> $\lambda_{\text{foveal}}$ and $\lambda_{\text{peripheral}}$:
+            $$
+            \begin{aligned}
+            \text{Attention}(Q, K, V) =\ &\text{softmax}\left(\frac{QK_{\text{text}}^T}{\sqrt{d_k}}\right)V_{\text{text}} \\
+            &+ \lambda_{\text{foveal}}\cdot\text{softmax}\left(\frac{QK_{\text{foveal}}^T}{\sqrt{d_k}}\right)V_{\text{foveal}} \\
+            &+ \lambda_{\text{peripheral}}\cdot\text{softmax}\left(\frac{QK_{\text{peripheral}}^T}{\sqrt{d_k}}\right)V_{\text{peripheral}}
+            \end{aligned}
+            $$
+        </p>
+    </div>
+
+     <div class="container blog comment main gray">
+        <div class="content">
+            <div class="interactive-image-wrapper" style="position: relative; display: inline-block; width: 100%;">
+                <img src="clarity/images/arch.png">
+                <!-- DINOv2 region (left) -->
+                <a href="#foveal-peripheral-features" class="image-hotspot" style="position: absolute; left: 15%; top: 6%; width: 38%; height: 28%; cursor: pointer;" title="Learn about foveal and peripheral features"></a>
+                <!-- DINOv2 region (right) -->
+                <a href="#foveal-peripheral-features" class="image-hotspot" style="position: absolute; left: 61%; top: 8%; width: 13%; height: 24%; cursor: pointer;" title="Learn about foveal and peripheral features"></a>
+                <!-- Cross-attention region -->
+                <a href="#conditioning-adapters" class="image-hotspot" style="position: absolute; left: 9%; top: 45%; width: 87%; height: 51%; cursor: pointer;" title="Learn about conditioning adapters"></a>
+            </div>
+            <p class="caption">
+                <b><span style="color: #097969; font-weight: 900; font-style:italic;">MetamerGen</span> model architecture.</b> High-resolution and blurred, low-resolution images are processed through DINOv2-Base to extract patch tokens. Foveal features are obtained by applying binary masks to high-resolution patch tokens, retaining only fixated regions. Both foveal and peripheral patch tokens are processed through separate Perceiver-based query networks that compress features into conditioning tokens compatible with Stable Diffusion's cross-attention mechanism. The resulting dual conditioning streams are integrated into the pretrained UNet.
+            </p>
+        </div>
+
+        <div class="content-comment">
+            <p class="caption comment">
+                Click on regions of the diagram to learn more.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="container blog main">
+        <h1 >
+            Interactive metamer generations
+        </h1>
+
+        <p class="text" style="text-align: justify"> The interactive metamer explorers below let you adjust the conditioning parameters that determine how metamers are generated. By modifying these settings, you can control the balance between foveal and peripheral information, the degree of peripheral blur, and the number of fixated regions used as input.
+        Experiment with these parameters to observe how each one affects whether the resulting image qualifies as a metamer of the original. Feel free to explore and experiment with different values.
+        </p>
+    </div>
+
+        <style>
+            .metamer-select {
+                padding: 8px 6px;
+                font-size: 0.65em;
+                font-family: 'Charter', serif;
+                border: 1px solid #ccc;
+                background: white;
+                cursor: pointer;
+                width: 70px;
+                height: auto;
+                line-height: 1.8;
+                outline: none;
+                overflow: visible;
+            }
+            .metamer-select:hover {
+                border-color: #097969;
+            }
+            .metamer-select:focus {
+                border-color: #097969;
+                box-shadow: 0 0 0 2px rgba(9, 121, 105, 0.15);
+            }
+            .param-row {
+                display: flex;
+                align-items: center;
+                margin-bottom: 3px;
+                gap: 6px;
+            }
+            .param-label {
+                font-size: 0.7em;
+                color: #444;
+                min-width: 95px;
+                text-align: right;
+                font-family: 'Charter', serif;
+            }
+        </style>
+        <div class="container blog extra-extra-large gray">
+            <div class="explorer-container">
+                <!-- Explorer A -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-a" class="metamer-select" onchange="updateMetamerImage('a')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-a" class="metamer-select" onchange="updateMetamerImage('a')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">Blur level</span>
+                            <select id="blur-select-a" class="metamer-select" onchange="updateMetamerImage('a')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-a" class="metamer-select" onchange="updateMetamerImage('a')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-a" class="enlargeable-img" src="clarity/results_images_94/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-a" class="enlargeable-img" src="clarity/results_images_94/results_images/94_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer B -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-b" class="metamer-select" onchange="updateMetamerImage('b')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-b" class="metamer-select" onchange="updateMetamerImage('b')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">Blur level</span>
+                            <select id="blur-select-b" class="metamer-select" onchange="updateMetamerImage('b')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-b" class="metamer-select" onchange="updateMetamerImage('b')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-b" class="enlargeable-img" src="clarity/results_images_124/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-b" class="enlargeable-img" src="clarity/results_images_124/results_images/124_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer C -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-c" class="metamer-select" onchange="updateMetamerImage('c')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-c" class="metamer-select" onchange="updateMetamerImage('c')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">Blur level</span>
+                            <select id="blur-select-c" class="metamer-select" onchange="updateMetamerImage('c')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-c" class="metamer-select" onchange="updateMetamerImage('c')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-c" class="enlargeable-img" src="clarity/results_images_158/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-c" class="enlargeable-img" src="clarity/results_images_158/results_images/158_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container blog extra-extra-large gray">
+            <div class="explorer-container">
+                <!-- Explorer D -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-d" class="metamer-select" onchange="updateMetamerImage('d')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-d" class="metamer-select" onchange="updateMetamerImage('d')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">blur level</span>
+                            <select id="blur-select-d" class="metamer-select" onchange="updateMetamerImage('d')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-d" class="metamer-select" onchange="updateMetamerImage('d')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-d" class="enlargeable-img" src="clarity/results_images_165/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-d" class="enlargeable-img" src="clarity/results_images_165/results_images/165_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer E -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-e" class="metamer-select" onchange="updateMetamerImage('e')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-e" class="metamer-select" onchange="updateMetamerImage('e')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">blur level</span>
+                            <select id="blur-select-e" class="metamer-select" onchange="updateMetamerImage('e')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-e" class="metamer-select" onchange="updateMetamerImage('e')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-e" class="enlargeable-img" src="clarity/results_images_189/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-e" class="enlargeable-img" src="clarity/results_images_189/results_images/189_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer F -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-f" class="metamer-select" onchange="updateMetamerImage('f')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-f" class="metamer-select" onchange="updateMetamerImage('f')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">blur level</span>
+                            <select id="blur-select-f" class="metamer-select" onchange="updateMetamerImage('f')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-f" class="metamer-select" onchange="updateMetamerImage('f')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-f" class="enlargeable-img" src="clarity/results_images_205/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-f" class="enlargeable-img" src="clarity/results_images_205/results_images/205_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container blog extra-extra-large gray">
+            <div class="explorer-container">
+                <!-- Explorer G -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-g" class="metamer-select" onchange="updateMetamerImage('g')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-g" class="metamer-select" onchange="updateMetamerImage('g')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">blur level</span>
+                            <select id="blur-select-g" class="metamer-select" onchange="updateMetamerImage('g')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-g" class="metamer-select" onchange="updateMetamerImage('g')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-g" class="enlargeable-img" src="clarity/results_images_229/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-g" class="enlargeable-img" src="clarity/results_images_229/results_images/229_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer H -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-h" class="metamer-select" onchange="updateMetamerImage('h')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-h" class="metamer-select" onchange="updateMetamerImage('h')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">blur level</span>
+                            <select id="blur-select-h" class="metamer-select" onchange="updateMetamerImage('h')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-h" class="metamer-select" onchange="updateMetamerImage('h')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-h" class="enlargeable-img" src="clarity/results_images_241/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-h" class="enlargeable-img" src="clarity/results_images_241/results_images/241_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer I -->
+                <div class="explorer-panel">
+                    <div class="param-controls" style="display: flex; flex-direction: column;">
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{foveal}}$</span>
+                            <select id="foveal-select-i" class="metamer-select" onchange="updateMetamerImage('i')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">$\lambda_{\text{peripheral}}$</span>
+                            <select id="peripheral-select-i" class="metamer-select" onchange="updateMetamerImage('i')">
+                                <option value="0">0.0</option>
+                                <option value="1" selected>0.5</option>
+                                <option value="2">1.0</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label">blur level</span>
+                            <select id="blur-select-i" class="metamer-select" onchange="updateMetamerImage('i')">
+                                <option value="0">1/16×</option>
+                                <option value="1">1/8×</option>
+                                <option value="2">1/4×</option>
+                                <option value="3">1/2×</option>
+                                <option value="4">1×</option>
+                            </select>
+                        </div>
+                        <div class="param-row">
+                            <span class="param-label"># of fixations</span>
+                            <select id="nfix-select-i" class="metamer-select" onchange="updateMetamerImage('i')">
+                                <option value="0">1</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">5</option>
+                                <option value="4">10</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="explorer-images" style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Original</span>
+                            <span style="width: 170px; text-align: center; font-size: 0.65em; color: #555; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500;">Generated</span>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <img id="metamer-original-i" class="enlargeable-img" src="clarity/results_images_248/results_images/fix_1.png" style="width: 170px; height: 170px; object-fit: cover; object-position: center center; display: block; cursor: zoom-in;">
+                            <img id="metamer-result-i" class="enlargeable-img" src="clarity/results_images_248/results_images/248_0.5_0.5_0_0.png" style="width: 170px; height: 170px; object-fit: cover; display: block; cursor: zoom-in;">
+                            <!-- Modal for image enlargement -->
+                            <style>
+                            #enlarge-modal {
+                                display: none;
+                                position: fixed;
+                                z-index: 9999;
+                                left: 0; top: 0; width: 100vw; height: 100vh;
+                                background: rgba(0,0,0,0.88);
+                                align-items: center; justify-content: center;
+                                transition: background 0.25s;
+                                overflow: auto;
+                            }
+                            #enlarge-modal.show {
+                                display: flex;
+                                animation: fadeInBg 0.25s;
+                            }
+                            @keyframes fadeInBg {
+                                from { background: rgba(0,0,0,0); }
+                                to { background: rgba(0,0,0,0.88); }
+                            }
+                            #enlarge-modal-img {
+                                width: 70vmin; height: 70vmin;
+                                max-width: 90vw; max-height: 90vw;
+                                object-fit: cover;
+                                box-shadow: 0 0 32px #000a;
+                                border-radius: 18px;
+                                background: transparent;
+                                transform: scale(0.85);
+                                opacity: 0;
+                                transition: transform 0.28s cubic-bezier(.4,1.6,.4,1), opacity 0.28s;
+                                margin: 0 auto;
+                                display: block;
+                                aspect-ratio: 1/1;
+                                animation: popInImg 0.28s cubic-bezier(.4,1.6,.4,1);
+                            }
+                            #enlarge-modal.show #enlarge-modal-img {
+                                transform: scale(1);
+                                opacity: 1;
+                            }
+                            @keyframes popInImg {
+                                from { transform: scale(0.7); opacity: 0; }
+                                to { transform: scale(1); opacity: 1; }
+                            }
+                            #enlarge-modal-close {
+                                position: fixed;
+                                top: 32px;
+                                right: 48px;
+                                color: #fff;
+                                font-size: 2.1em;
+                                font-weight: 400;
+                                cursor: pointer;
+                                user-select: none;
+                                text-shadow: 0 1px 6px #0008;
+                                transition: color 0.18s;
+                                background: none;
+                                border: none;
+                                z-index: 10001;
+                                padding: 0;
+                                line-height: 1;
+                                letter-spacing: 0.01em;
+                            }
+                            #enlarge-modal-close:hover {
+                                color: #ffb3b3;
+                                background: none;
+                            }
+                            @media (max-width: 700px) {
+                                #enlarge-modal-img { width: 96vw; height: 96vw; max-width: 96vw; max-height: 96vw; }
+                                #enlarge-modal-close { top: 10px; right: 10px; left: auto; font-size: 1.5em; }
+                            }
+                            </style>
+                            <div id="enlarge-modal">
+                                <img id="enlarge-modal-img" src="" alt="Enlarged image">
+                                <span id="enlarge-modal-close">&times;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="container blog main">
+        <h1 >
+            Behaviorally-conditioned scene metamers
+        </h1>
+
+        <p class="text">
+            We developed a real-time same-different behavioral paradigm to evaluate whether <span style="color:#097969; font-weight:bold; font-style:italic;">MetamerGen</span> generates perceptually convincing scene metamers. This paradigm directly tests whether images reconstructed from sparse fixational sampling can achieve perceptual equivalence with the original, thereby revealing the sufficiency of fixated information for scene representation.
+        </p>
+    </div>
+
+    <div class="container blog comment gray main">
+        <div class="content">
+            <div class="interactive-image-wrapper" style="position:static; display: inline-block; width: 100%;">
+                <img src="clarity/images/behavioral_paradigm.png">
+            </div>
+            <p class="caption">
+                <b>Real-time paradigm for determining scene metamers.</b> Each trial begins with drift correction and central fixation, followed by free viewing of an original scene for a predetermined number of fixations. After image offset, participants maintain central fixation for 5 seconds while fixation coordinates are transmitted via API to <span style="color: #097969; font-weight: 900; font-style:italic;">MetamerGen</span> for real-time image generation. The generated image (or original, depending on the condition) is then presented to the viewer for 200ms, followed by an enforced same-different behavioral judgment via a gamepad within a 10-second response window.
+            </p>
+        </div>
+
+        <div class="content-comment">
+            <p class="caption comment">
+                In a <b>same-different task</b>, observers judge whether two stimuli are identical or different. For metamers, this is the gold standard — if observers cannot reliably distinguish an original from its metamer, the two images are perceptually equivalent. This directly tests whether our generated images capture the essential information encoded by the visual system.
+            </p>
+        </div>
+    </div>
+
+    <div class="container blog main">
+        <p class="text" style="text-align: justify;">
+            <span style="font-weight:700;">45 participants</span> each completed <span style="font-weight:700;">300 trials</span>. At the start of every trial, they freely viewed a natural scene until reaching a predetermined fixation count — <span style="font-weight:700;">1, 2, 3, 5, or 10</span> — chosen entirely on their own, with eye gaze tracked throughout. Once the image disappeared, they held fixation on a blank screen for 5 seconds while <span style="color:#097969; font-weight:700; font-style:italic;">MetamerGen</span> generated a new version of the scene <span style="color:#097969; font-weight:600;">in real time</span>, conditioned on exactly where and when they had looked. They were then shown a second image for just <span style="font-weight:700;">200 milliseconds</span> — too fast for an eye movement, but sufficient for a perceptual judgment — and asked: same or different?
+            <br><br>
+            The second image was either the original scene, or a generation conditioned on one of two fixation strategies: <span style="font-weight:700;">your own fixations</span> or <span style="font-weight:700;">random fixation points</span> within the image. This last condition, evaluated by a separate group of <span style="font-weight:700;">12 participants</span>, serves as a baseline: how well does <span style="color:#097969; font-weight:700; font-style:italic;">MetamerGen</span> fool you when it has no information about where anyone actually looked?
+        </p>
+    </div>
+
+    <div class="container blog main">
+        <h1 >
+            Probing the features of scene metamers
+        </h1>
+
+        <h2>
+            Neurally-grounded hierarchical feature similarity
+        </h2>
+
+        <p class="text" style="text-align: justify;">
+            To understand <em>where</em> in the brain metamerism arises, we used a neurally-grounded AlexNet whose internal representations align with visual areas spanning V1 through inferotemporal cortex. By computing feature similarity at early, mid, and late layers, we asked: at what stage does a scene "become" a metamer? The answer: <span style="font-weight:700;">all of them</span>. Higher feature similarity predicted more "same" judgments across every layer — metamerism requires broad alignment, not a single processing stage. But the more telling result is the divergence between fixation-guided and random generations. Despite near-identical metamer rates (<span style="font-weight:700;">29.4%</span> vs. <span style="font-weight:700;">27.7%</span>), they split at mid and late layers: fixation-guided metamers followed a clean linear trend, while random generations became <em>less</em> convincing as feature similarity increased. Realistic detail in regions you never fixated can, paradoxically, work against you.
+        </p>
+    </div>
+
+    <div class="container blog comment main">
+        <div class="content">
+            <div class="interactive-image-wrapper" style="position: relative; display: inline-block; width: 100%;">
+                <img src="clarity/images/neurally_grounded.png">
+            </div>
+            <p class="caption">
+            <b>Neurally-grounded feature similarity across the visual hierarchy.</b> Original and generated images are passed through a blur-robust AlexNet, with early, mid, and late layers serving as proxies for low- to high-level visual processing. Cosine similarity between feature maps is binned against the proportion of "same" judgments. Generations from a viewer's own fixations <span style="color:#e87e7e; font-weight:700;">(salmon)</span> and from random fixation points <span style="color:#097969; font-weight:700;">(teal)</span> are shown separately across all three processing levels.
+            </p>
+        </div>
+
+        <div class="content-comment">
+            <p class="caption comment">
+                <b>Why this model?</b> The <a href="https://www.nature.com/articles/s41467-024-45679-0" target="_blank" style="color:#097969;">Jang & Tong (2024)</a> AlexNet was trained on a mix of clear and blurry images — mimicking the degraded input the visual system constantly receives from the periphery. This makes its internal representations unusually well-aligned with actual neural responses across the visual hierarchy, from early areas like V1 all the way through high-level object-sensitive cortex. That alignment is what makes it useful here: rather than just measuring pixel-level similarity, we're measuring similarity in a representational space that actually tracks how the brain encodes visual scenes.
+            </p>
+        </div>
+    </div>
+
+    <div class="container blog main">
+        <h1></h1>  
+        <h2>
+            Mid-level visual feature similarities
+        </h2>
+
+        <p class="text" style="text-align: justify;">
+        We next asked whether metamerism is sensitive to mid-level scene structure — the kind of layout information your visual system extracts before it fully parses objects. We focused on two features: <span style="font-weight:700;">relative depth</span> and <span style="font-weight:700;">proto-object segmentation</span>. For depth, we compared depth maps extracted from original and generated images using Depth Anything — as depth discrepancy increased, metamer rates dropped systematically. Scene layout, it turns out, matters. For proto-objects, we used the mid-layer representations of the same neurally-grounded AlexNet from before: these capture the pre-semantic building blocks of visual scenes — local features grouped into simple shapes, before the brain commits to full object recognition. Greater overlap in proto-object segmentation predicted more "same" judgments. Of the two, depth showed the cleaner effect, but both point to the same conclusion: <em>getting the mid-level structure right is non-negotiable for a convincing metamer</em>.
+        </p>
+    </div>
+
+   <div class="container blog comment main">
+        <div class="content">
+            <div class="interactive-image-wrapper" style="position: relative; display: inline-block; width: 95%;">
+                <img src="clarity/images/mid_level.png">
+            </div>
+            <p class="caption">
+                <b>Mid- and high-level visual features predicting metamer judgments.</b> For fixation-guided generations <span style="color:#e87e7e; font-weight:700;">(salmon)</span>, increasing depth map discrepancy systematically reduced "same" judgments, while greater proto-object segmentation overlap (mIoU) increased them — though with a weaker effect. On the high-level side, larger DreamSim distances consistently reduced metamer rates, and CLIP similarity showed a similar trend, except for randomly-guided generations <span style="color:#097969; font-weight:700;">(teal)</span>.
+            </p>
+        </div>
+        <div class="content-comment">
+            <p class="caption comment">
+                <b>Proto-objects</b> are the pre-semantic building blocks of visual scenes — local features grouped into simple shapes before the brain commits to full object recognition. We extract them from the conv3 layer of the neurally-grounded AlexNet, the same mid-level stage shown to correlate with early visual cortex responses.
+            </p>
+        </div>
+    </div>
+
+    <div class="container blog main">
+        <h1></h1>  
+        <h2>
+            High-level semantic feature similarities
+        </h2>
+
+        <p class="text" style="text-align: justify;">
+            Finally, we asked whether metamerism tracks high-level semantic alignment — how similar the generated scene is in meaning, not just structure. We used two models: <span style="font-weight:700;">CLIP</span> and <span style="font-weight:700;">DreamSim</span>. DreamSim told the clearest story: smaller distances between original and generated images consistently predicted more "same" judgments. CLIP showed the same trend, but with a catch: the relationship held only for fixation-guided generations. For random fixations, higher CLIP similarity did <em>not</em> predict more metamer judgments. We think this reflects the fact that random fixations often land on contextually irrelevant regions, introducing semantic detail that conflicts with what the viewer actually encoded — making the generation feel off even when it looks superficially similar. Together, these results suggest that <em>your own fixations don't just guide where you look — they shape the semantic representation you form</em>, and generations conditioned on them are better aligned with that internal representation.
+        </p>
+    </div>
+
+    <div class="container blog comment main">
+        <div class="content">
+            <div class="interactive-image-wrapper" style="position:relative; display: inline-block; width: 85%;">
+                <img src="clarity/images/high_level.png">
+            </div>
+            <p class="caption">
+                <b>High-level semantic feature similarities predicting metamer judgments.</b> DreamSim distance and CLIP similarity are plotted against metamer rates for fixation-guided <span style="color:#e87e7e; font-weight:700;">(salmon)</span> and random <span style="color:#097969; font-weight:700;">(teal)</span> generations. Greater semantic alignment predicts more "same" judgments for fixation-guided generations across both metrics. For random generations, this relationship breaks down — particularly in CLIP — suggesting that semantic alignment alone is insufficient when fixations don't reflect the viewer's actual scene representation.
+            </p>
+        </div>
+        <div class="content-comment">
+            <p class="caption comment">
+                We chose DreamSim precisely because of its training objective: unlike CLIP, which learns semantic structure from image-text pairs, DreamSim was fine-tuned on human perceptual similarity judgments collected via a two-alternative forced-choice paradigm — the same task structure used in our experiment. This makes it a direct model of human visual similarity, and a natural fit for predicting metamer judgments.
+            </p>
+        </div>
+    </div>
+
+    <div class="container blog main">
+        <h1></h1>  
+        <h2>
+            Individual contributions of foveal and peripheral features to metameric judgements
+        </h2>
+
+        <p class="text" style="text-align: justify;">
+            To understand what each conditioning stream contributes, we ran an ablation with <span style="font-weight:700;">10 additional participants</span> using four second-image conditions: the original scene, a full model generation (foveal + peripheral), a <span style="font-weight:700;">peripheral-only</span> generation, and a <span style="font-weight:700;">foveal-only</span> generation. The results were clear. The full model achieved the highest metamer rate at <span style="font-weight:700;">54.5%</span>, followed by peripheral-only at <span style="font-weight:700;">45.8%</span>, and foveal-only at just <span style="font-weight:700;">8.4%</span>. Foveal-only generations accurately captured fixated details but diverged substantially in the periphery — enough to be reliably detected as different. Peripheral-only generations, by contrast, preserved global scene structure and layout, making them far more perceptually convincing on their own. That said, foveal conditioning is not redundant: when combined with peripheral features, it contributes semantic and visual detail that meaningfully closes the gap — producing generations more aligned with human scene understanding than either stream alone.
+        </p>
+    </div>
+
+    <div class="container blog comment main">
+        <div class="content">
+            <div class="interactive-image-wrapper" style="position:relative; display: inline-block; width: 85%;">
+                <img src="clarity/images/foveal_peripheral.png">
+            </div>
+            <p class="caption">
+                <b>Metamer rates across foveal and peripheral conditioning conditions.</b> The full model (foveal + peripheral) achieved the highest fooling rate, followed by peripheral-only, with foveal-only lagging substantially behind. Qualitative examples show that foveal-only generations capture fixated detail but diverge in global structure — making them easy to distinguish — while peripheral-only generations preserve scene layout at the cost of fine-grained detail.
+            </p>
+                
+        </div>
+        <div class="content-comment">
+            <p class="caption comment">
+                One subtlety worth noting: participants in this ablation judged full-model generations as "same" at <span style="font-weight:700;">54.5%</span> — nearly double the <span style="font-weight:700;">29.4%</span> rate from the primary experiment. We think the foveal-only condition acted as a low anchor: its clearly inferior generations lowered participants' threshold for calling something "same," inflating rates across the board. Rather than a confound, this increased variance actually made the feature correlation analyses more informative.
+            </p>
+        </div>
+    </div>
+
+   <div class="container blog main">
+                <h1 id="bibtex-citation">BibTeX</h1>
+                <p class="text">If you find this work useful, please cite using the following BibTeX entry:</p>
+                <pre style="background:#f5f5f5; border-left: 3px solid #097969; padding: 16px 20px; border-radius: 4px; font-size: 0.75em; line-height: 1.6; overflow-x: auto; font-family: 'Courier New', monospace; color: #1a1a1a;">
+@inproceedings{
+    raina2026generating,
+    title={Generating metamers of human scene understanding},
+    author={Ritik Raina and Abe Leite and Alexandros Graikos and Seoyoung Ahn and Dimitris Samaras and Greg Zelinsky},
+    booktitle={The Fourteenth International Conference on Learning Representations},
+    year={2026},
+    url={https://openreview.net/forum?id=cSDXx8V6K9}
+}
+                </pre>
+        </div>
 
 
-</body></html>
+    </div>
+
+
+    <!-- Footer Page -->
+    <footer>
+        <div class="container">
+            <p>
+                Website borrowed from the <a href="https://shikun.io/projects/clarity">Clarity Template</a>, designed by <a href="https://shikun.io/">Shikun Liu</a>.
+            </p>
+        </div>    
+    </footer>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="clarity/clarity.js"></script>    
+    <script>
+        function updateMetamerImage(panelId) {
+            const fovealValues = ["0.0", "0.5", "1.0"];
+            const peripheralValues = ["0.0", "0.5", "1.0"];
+            const nFixValues = ["0", "1", "2", "4", "9"];
+            
+            const imageIds = { 'a': '94', 'b': '124', 'c': '158', 'd': '165', 'e': '189', 'f': '205', 'g': '229', 'h': '241', 'i': '248' };
+            const imageId = imageIds[panelId];
+
+            const fovealIdx = parseInt(document.getElementById(`foveal-select-${panelId}`).value, 10);
+            const peripheralIdx = parseInt(document.getElementById(`peripheral-select-${panelId}`).value, 10);
+            const blurLevel = document.getElementById(`blur-select-${panelId}`).value;
+            const nFixIdx = parseInt(document.getElementById(`nfix-select-${panelId}`).value, 10);
+
+            const foveal = fovealValues[fovealIdx];
+            const peripheral = peripheralValues[peripheralIdx];
+            const nFix = nFixValues[nFixIdx];
+
+            const fileName = `${imageId}_${foveal}_${peripheral}_${blurLevel}_${nFix}.png`;
+            const filePath = `clarity/results_images_${imageId}/results_images/${fileName}`;
+
+            // Update Original image based on fixation count (update first)
+            const fixationCounts = [1, 2, 3, 5, 10];
+            const fixCount = fixationCounts[nFixIdx];
+            const fixFilePath = `clarity/results_images_${imageId}/results_images/fix_${fixCount}.png`;
+            document.getElementById(`metamer-original-${panelId}`).src = fixFilePath;
+
+            // Update Generated image
+            document.getElementById(`metamer-result-${panelId}`).src = filePath;
+
+        }
+
+        updateMetamerImage('a');
+        updateMetamerImage('b');
+        updateMetamerImage('c');
+        updateMetamerImage('d');
+        updateMetamerImage('e');
+        updateMetamerImage('f');
+        updateMetamerImage('g');
+        updateMetamerImage('h');
+        updateMetamerImage('i');
+    </script>
+    <script>
+    // Click-to-enlarge for explorer images with square modal and animation
+    document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.getElementById('enlarge-modal');
+        var modalImg = document.getElementById('enlarge-modal-img');
+        var modalClose = document.getElementById('enlarge-modal-close');
+        document.querySelectorAll('.enlargeable-img').forEach(function(img) {
+            img.addEventListener('click', function(e) {
+                modal.classList.add('show');
+                modalImg.src = img.src;
+                setTimeout(function() { modalImg.style.opacity = 1; }, 10);
+            });
+        });
+        function closeModal() {
+            modal.classList.remove('show');
+            setTimeout(function() { modalImg.src = ''; modalImg.style.opacity = 0; }, 250);
+        }
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (modal.classList.contains('show') && (e.key === 'Escape' || e.key === 'Esc')) closeModal();
+        });
+    });
+    </script>
+    <script src="assets/scripts/main.js"></script>    
+    </html>
+</body>
