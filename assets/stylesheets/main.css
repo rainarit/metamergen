@@ -154,12 +154,13 @@ svg {
 }
 
 .container {
-  padding-right: 5vw;
-  padding-left: 5vw;
+  padding-right: 2vw;
+  padding-left: 2vw;
   flex: 1;
-  max-width: 1200px;
+  max-width: 100vw;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
 }
 
 ::-moz-selection {
@@ -201,8 +202,9 @@ svg {
 }
 @media screen and (min-width: 769px) {
   .container {
-    padding-right: 6vw;
-    padding-left: 6vw;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    box-sizing: border-box;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 16px;
@@ -233,8 +235,9 @@ svg {
 }
 @media screen and (min-width: 992px) {
   .container {
-    padding-right: 8vw;
-    padding-left: 8vw;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    box-sizing: border-box;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 16px;
@@ -265,8 +268,9 @@ svg {
 }
 @media screen and (min-width: 1200px) {
   .container {
-    padding-right: 10vw;
-    padding-left: 10vw;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    box-sizing: border-box;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 17px;
@@ -297,8 +301,9 @@ svg {
 }
 @media screen and (min-width: 1600px) {
   .container {
-    padding-right: 12vw;
-    padding-left: 12vw;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    box-sizing: border-box;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 18px;
@@ -329,8 +334,9 @@ svg {
 }
 @media screen and (min-width: 2000px) {
   .container {
-    padding-right: 14vw;
-    padding-left: 14vw;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    box-sizing: border-box;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 18px;
@@ -361,8 +367,9 @@ svg {
 }
 @media screen and (min-width: 2400px) {
   .container {
-    padding-right: calc(24vw - (100vw - 100%));
-    padding-left: 24vw;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    box-sizing: border-box;
   }
   a, p, td, th, tr, code, pre, ol, ul, li, div {
     font-size: 20px;
@@ -393,8 +400,9 @@ svg {
 }
 @media screen and (min-width: 3200px) {
   .container {
-    padding-right: calc(32vw - (100vw - 100%));
-    padding-left: 28vw;
+    padding-right: 2vw;
+    padding-left: 2vw;
+    box-sizing: border-box;
   }
 }
 footer {
