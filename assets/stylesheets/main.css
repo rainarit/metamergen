@@ -1,3 +1,30 @@
+  /* Responsive layout for metamer explorer panels */
+  .explorer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  .explorer-panel {
+    flex: 1 1 30%;
+    min-width: 320px;
+    max-width: 420px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 1200px) {
+    .explorer-panel {
+      flex: 1 1 45%;
+      min-width: 320px;
+      max-width: 600px;
+    }
+  }
+  @media (max-width: 800px) {
+    .explorer-panel {
+      flex: 1 1 100%;
+      min-width: 220px;
+      max-width: 100vw;
+    }
+  }
   /* Ensure images in .content-comment divs are styled responsively and consistently */
   .content-comment img {
     display: block;
