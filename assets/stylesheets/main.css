@@ -1,3 +1,11 @@
+  /* Ensure images in .content-comment divs are styled responsively and consistently */
+  .content-comment img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
   html {
     box-sizing: border-box;
     overflow-x: hidden;
