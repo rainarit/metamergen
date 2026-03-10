@@ -121,10 +121,13 @@ hr.soft {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-img {
-  width: 100%;
-  margin: 0 auto;
+
+div img {
   display: block;
+  max-width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 video {
@@ -502,6 +505,22 @@ div.container.blog p.caption {
   font-weight: 500;
   line-height: 1.2;
   font-size: 90%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+/* Center and make metamerism image responsive */
+.metamerism-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  height: auto;
 }
 div.container.blog p.caption b {
   font-weight: 700 !important;
