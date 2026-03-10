@@ -63,9 +63,10 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-  display: block;
+	display: block;
 }
 
+body {
   background-color: white;
   display: flex;
   flex-direction: column;
